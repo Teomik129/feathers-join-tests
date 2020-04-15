@@ -4,42 +4,21 @@
 
 ## About
 
-This project uses [Feathers](http://feathersjs.com). An open source web framework for building modern real-time applications.
+This project runs basic speed tests for various implementations of joining/populating hooks using [Feathers](http://feathersjs.com). It generates 3 in-memory services with 5000 records each and performs a depth 2 join using a given hook i.e. objects from `foos` contain objects from `bars` which contain objects from `bazzes`. Thus far the hooks tested are:
 
-## Getting Started
+- [`withResult`](https://daddywarbucks.github.io/feathers-fletching/hooks.html#withresult) from [`feathers-fletching`](https://daddywarbucks.github.io/feathers-fletching/overview.html)
+- [`fastJoin`](https://hooks-common.feathersjs.com/hooks.html#fastjoin) from [`feathers-hooks-common`](https://hooks-common.feathersjs.com)
+- [`populate`](https://feathers-graph-populate.netlify.app/getting-started.html#register-the-populate-hook) from [`feathers-graph-populate`](https://feathers-graph-populate.netlify.app/)
 
-Getting up and running is as easy as 1, 2, 3.
+Sample output from my laptop (Core i7, 16GB):
 
-1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
-2. Install your dependencies
-
-    ```
-    cd path/to/feathers-join-tests
-    npm install
-    ```
-
-3. Start your app
-
-    ```
-    npm start
-    ```
-
-## Testing
-
-Simply run `npm test` and all your tests in the `test/` directory will be run.
-
-## Scaffolding
-
-Feathers has a powerful command line interface. Here are a few things it can do:
-
-```
-$ npm install -g @feathersjs/cli          # Install Feathers CLI
-
-$ feathers generate service               # Generate a new Service
-$ feathers generate hook                  # Generate a new Hook
-$ feathers help                           # Show all commands
+```sh
+Testing withResult...
+withResult: 11.031s
+Testing fastJoin...
+fastJoin: 21.610s
+Testing graphPopulate...
+graphPopulate: 1:23.842
 ```
 
-## Help
-
-For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
+To run the tests, simply run `npm test`
