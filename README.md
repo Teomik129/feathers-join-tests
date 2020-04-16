@@ -12,6 +12,8 @@
 
 Sample output from my laptop (Core i7, 16GB):
 
+`graphPopulate` is currently not running its inner joins. Probably mis-configured. But the results are heavily skewed until that is fixed.
+
 <!--
   These are skewed results from when .hooks() was adding on hooks
   rather than replacing as the author expected, thus why the results
