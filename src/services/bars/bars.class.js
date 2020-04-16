@@ -1,4 +1,4 @@
-const { Service } = require('feathers-memory');
+const { Service } = require('feathers-nedb');
 
 exports.Bars = class Bars extends Service {
   
