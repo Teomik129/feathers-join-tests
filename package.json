@@ -23,10 +23,14 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "test": "npm run lint && npm run start",
     "lint": "eslint src/. --config .eslintrc.json",
     "dev": "nodemon src/",
-    "start": "node src/"
+    "start": "node src/",
+    "seed": "node src/seed.js",
+    "test:belongsTo": "node src/tests/belongsTo/",
+    "test:hasMany": "node src/tests/hasMany/",
+    "test:belongsToBatchLoader": "node src/tests/belongsToBatchLoader/",
+    "test:hasManyBatchLoader": "node src/tests/hasManyBatchLoader/"
   },
   "standard": {
     "env": [
@@ -35,12 +39,16 @@
     "ignore": []
   },
   "dependencies": {
+    "@feathers-plus/batch-loader": "^0.3.6",
+    "@feathersjs/configuration": "^4.5.2",
     "@feathersjs/feathers": "^4.5.2",
     "faker": "^4.1.0",
     "feathers-fletching": "^1.7.1",
     "feathers-graph-populate": "^1.0.5",
     "feathers-hooks-common": "^5.0.2",
-    "feathers-memory": "^4.1.0"
+    "feathers-memory": "^4.1.0",
+    "feathers-nedb": "^5.1.0",
+    "nedb": "^1.8.0"
   },
   "devDependencies": {
     "@feathersjs/cli": "^4.3.0",
