@@ -65,7 +65,13 @@ module.exports = async app => {
 
   app.service("bars").hooks({
     after: {
-      all: [fastJoin(barResolvers)]
+      all: [
+        context => {
+          // batchLoader tries to skip itself with _populate: 'skip'
+          context.params._populate = null
+        },
+        fastJoin(barResolvers)
+      ]
     }
   });
 
