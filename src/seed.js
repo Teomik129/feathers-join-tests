@@ -35,7 +35,6 @@ const seed = async () => {
 
   await (async function() {
     for (const baz of bazzes) {
-      console.log({ baz })
       await app
         .service("bars")
         .create(Array.from({ length: 2 }, () => fakeBar(baz._id)));
@@ -43,8 +42,6 @@ const seed = async () => {
   }());
 
   const bars = await app.service("bars").find();
-
-  console.log({ bars })
 
   await (async function() {
     for (const bar of bars) {
