@@ -73,43 +73,23 @@ const bazBatchResolvers = {
   },
 };
 
-module.exports = async (app, opts = {}) => {
+module.exports = (opts = {}) => {
   const { batch, many } = opts;
 
-  const fooQuery = many
-    ? {
-        bar: false,
-      }
-    : undefined;
-
-  const barQuery = {
-    foos: many,
-    baz: !many,
-  };
-
-  const bazQuery = many
-    ? undefined
-    : {
-        bars: false,
-      };
-
-  app
-    .service("foos")
-    .hooks(
-      afterAll([fastJoin(batch ? fooBatchResolvers : fooResolvers, fooQuery)])
-    );
-
-  app
-    .service("bars")
-    .hooks(
-      afterAll([fastJoin(batch ? barBatchResolvers : barResolvers, barQuery)])
-    );
-
-  app
-    .service("bazzes")
-    .hooks(
-      afterAll([fastJoin(batch ? bazBatchResolvers : bazResolvers, bazQuery)])
-    );
-
-  return app.service(many ? "bazzes" : "foos").find();
+  const queries = [
+    {
+      bar: !many,
+    },
+    {
+      foos: many,
+      baz: !many,
+    },
+    {
+      bars: many,
+    },
+  ];
+  return (batch
+    ? [fooBatchResolvers, barBatchResolvers, bazBatchResolvers]
+    : [fooResolvers, barResolvers, bazResolvers]
+  ).map((resolver, i) => afterAll(fastJoin(resolver, queries[i])));
 };

@@ -47,9 +47,8 @@ const [bazBatchResult, bazBatchPrep] = [
 
 const exclude = () => undefined;
 
-module.exports = async (app, opts = {}) => {
+module.exports = (opts = {}) => {
   const { batch, many } = opts;
-
 
   if (many) {
     fooResult.bar = exclude;
@@ -63,27 +62,10 @@ module.exports = async (app, opts = {}) => {
     bazBatchResult.bars = exclude;
   }
 
-  app
-    .service("foos")
-    .hooks(
-      afterAll([
-        withResult(batch ? fooBatchResult : fooResult, batch && fooBatchPrep),
-      ])
-    );
-  app
-    .service("bars")
-    .hooks(
-      afterAll([
-        withResult(batch ? barBatchResult : barResult, batch && barBatchPrep),
-      ])
-    );
-  app
-    .service("bazzes")
-    .hooks(
-      afterAll([
-        withResult(batch ? bazBatchResult : bazResult, batch && bazBatchPrep),
-      ])
-    );
+  const preps = [fooBatchPrep, barBatchPrep, bazBatchPrep];
 
-  return app.service(many ? "bazzes" : "foos").find();
+  return (batch
+    ? [fooBatchResult, barBatchResult, bazBatchResult]
+    : [fooResult, barResult, bazResult]
+  ).map((res, i) => afterAll(withResult(res, batch && preps[i])));
 };

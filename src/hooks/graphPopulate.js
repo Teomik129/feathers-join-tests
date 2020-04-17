@@ -42,26 +42,7 @@ const bazPops = {
   },
 };
 
-module.exports = async (app, opts = {}) => {
-  const { many } = opts;
-
-  app.service("foos").hooks(afterAll([populate({ populates: fooPops })]));
-  app.service("bars").hooks(afterAll([populate({ populates: barPops })]));
-  app.service("bazzes").hooks(afterAll([populate({ populates: bazPops })]));
-
-  const query = many
-    ? {
-        bars: {
-          foos: {},
-        },
-      }
-    : {
-        bar: {
-          baz: {},
-        },
-      };
-
-  return app.service(many ? "bazzes" : "foos").find({
-    $populateParams: { query },
-  });
-};
+module.exports = () =>
+  [fooPops, barPops, bazPops].map((populates) =>
+    afterAll(populate({ populates }))
+  );

@@ -1,4 +1,4 @@
-module.exports = (hooks) => ({
+module.exports = (...hooks) => ({
   after: {
     all: hooks,
   },
