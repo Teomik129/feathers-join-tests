@@ -1,17 +1,17 @@
 const feathers = require("@feathersjs/feathers");
-const configuration = require('@feathersjs/configuration');
-const BatchLoader = require('@feathers-plus/batch-loader');
-const { GeneralError } = require('@feathersjs/errors');
+const configuration = require("@feathersjs/configuration");
+const BatchLoader = require("@feathers-plus/batch-loader");
+const { GeneralError } = require("@feathersjs/errors");
 
-const services = require('./services');
+const services = require("./services");
 
 module.exports = () => {
   const app = feathers();
   app.configure(configuration());
 
   // Simple syntax for creating batchloaders
-  app.mixins.push(function(service) {
-    service.loaderFactory = function(opts = {}) {
+  app.mixins.push(function addLoaderFactory(service) {
+    service.loaderFactory = function (opts = {}) {
       if (!service.find) {
         throw new GeneralError(
           `Cannot call the loaderFactory() method on this service because it does not have a find() method.`
@@ -19,27 +19,27 @@ module.exports = () => {
       }
       const { params = {}, ...rest } = opts;
       const options = {
-        id: '_id',
+        id: "_id",
         multi: false,
-        ...rest
+        ...rest,
       };
       const serviceParams = {
         paginate: false,
-        ...params
+        ...params,
       };
-      return new BatchLoader(async keys => {
+      return new BatchLoader(async (keys) => {
         const result = await service.find({
           ...serviceParams,
           query: {
             [options.id]: { $in: BatchLoader.getUniqueKeys(keys) },
-            ...serviceParams.query
-          }
+            ...serviceParams.query,
+          },
         });
         return BatchLoader.getResultsByKey(
           keys,
           result.data ? result.data : result,
-          rec => rec[options.id],
-          options.multi ? '[!]' : '!'
+          (rec) => rec[options.id],
+          options.multi ? "[!]" : "!"
         );
       });
     };
@@ -48,4 +48,4 @@ module.exports = () => {
   app.configure(services);
 
   return app;
-}
+};

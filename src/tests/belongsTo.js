@@ -1,11 +1,11 @@
-const graphPopulate = require("./graphPopulate");
-const fastJoin = require("./fastJoin");
-const withResult = require("./withResult");
+const graphPopulate = require("../hooks/graphPopulate");
+const fastJoin = require("../hooks/fastJoin");
+const withResult = require("../hooks/withResult");
+const { deepEqual } = require("assert");
 
-const createApp = require('../../app');
+const createApp = require("../app");
 
 async function speedTests() {
-
   // withResult - feathers-fletching
   console.info("Testing withResult...");
   console.time("withResult");
@@ -15,7 +15,7 @@ async function speedTests() {
   // fastJoin - feathers-hooks-common
   console.info("Testing fastJoin...");
   console.time("fastJoin");
-  const [fjRes] = await fastJoin(createApp())
+  const [fjRes] = await fastJoin(createApp());
   console.timeEnd("fastJoin");
 
   // populate - feathers-graph-populate
@@ -24,10 +24,11 @@ async function speedTests() {
   const [gpRes] = await graphPopulate(createApp());
   console.timeEnd("graphPopulate");
 
+  // Ensure results are the same
+  deepEqual(wsRes, fjRes);
+  deepEqual(fjRes, gpRes);
 
-  // console.info("Sample output");
+  console.info("Sample output");
   console.dir(wsRes, { depth: null });
-  console.dir(fjRes, { depth: null });
-  console.dir(gpRes, { depth: null });
 }
 speedTests();
