@@ -1,70 +1,26 @@
-const graphPopulate = require("../src/hooks/graphPopulate");
-const fastJoin = require("../src/hooks/fastJoin");
-const withResult = require("../src/hooks/withResult");
-const createApp = require("../src/app");
 const deepEqual = require("deep-equal");
-const afterAll = require("../src/util/afterAll");
+const execa = require("execa");
+const { join } = require("path");
+const { readJson } = require("fs-extra");
 
-const services = ["foos", "bars", "bazzes"];
-
-const applyHooks = (app, hooks) =>
-  services.forEach((serv, i) => app.service(serv).hooks(afterAll(hooks[i])));
+const hooks = ["withResult", "fastJoin", "graphPopulate"];
 
 module.exports = async function speedTests(opts = {}) {
-  const { many } = opts;
-
-  const start = many ? "bazzes" : "foos";
-
   const results = [];
 
-  // withResult - feathers-fletching
-  console.info("Testing withResult...");
-  const wrApp = createApp();
-  const wrHooks = withResult(opts);
-  applyHooks(wrApp, wrHooks);
-  console.time("withResult");
-  const [wrRes] = await wrApp.service(start).find();
-  console.timeEnd("withResult");
-  results.push(wrRes);
+  for (const hook of hooks) {
+    console.info(`Testing ${hook}...`)
 
-  // fastJoin - feathers-hooks-common
-  console.info("Testing fastJoin...");
-  const fjApp = createApp();
-  const fjHooks = fastJoin(opts);
-  applyHooks(fjApp, fjHooks);
-  console.time("fastJoin");
-  const [fjRes] = await fjApp.service(start).find();
-  console.timeEnd("fastJoin");
-  results.push(fjRes);
+    const { stdout } = await execa("node", [
+      join(__dirname, "testRunner.js"),
+      hook,
+      JSON.stringify(opts),
+    ]);
 
-  // populate - feathers-graph-populate
-  console.info("Testing graphPopulate...");
+    console.info(stdout);
 
-  const query = (many ? ["bars", "foos"] : ["bar", "baz"]).reduce(
-    (acc, key) => {
-      const [prevKey] = Object.keys(acc);
-      return prevKey
-        ? {
-            [prevKey]: {
-              [key]: {},
-            },
-          }
-        : {
-            [key]: {},
-          };
-    },
-    {}
-  );
-
-  const gpApp = createApp();
-  const gpHooks = graphPopulate();
-  applyHooks(gpApp, gpHooks);
-  console.time("graphPopulate");
-  const [gpRes] = await gpApp
-    .service(start)
-    .find({ $populateParams: { query } });
-  console.timeEnd("graphPopulate");
-  results.push(gpRes);
+    results.push(await readJson(join(__dirname, `${hook}-output.json`)))
+  }
 
   // Ensure results are the same
   const diff = results.find((res) => !deepEqual(res, results[0]));
@@ -73,5 +29,5 @@ module.exports = async function speedTests(opts = {}) {
   }
 
   console.info("Expected output");
-  console.dir(wrRes, { depth: null });
+  console.dir(results[0], { depth: null });
 };

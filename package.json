@@ -38,6 +38,7 @@
     "@feathersjs/errors": "^4.5.2",
     "@feathersjs/feathers": "^4.5.2",
     "deep-equal": "^2.0.2",
+    "execa": "^4.0.0",
     "feathers-fletching": "^1.7.1",
     "feathers-graph-populate": "^1.0.5",
     "feathers-hooks-common": "^5.0.2",
