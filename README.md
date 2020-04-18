@@ -10,7 +10,5 @@ This project runs basic speed tests for various implementations of joining/popul
 - [`fastJoin`](https://hooks-common.feathersjs.com/hooks.html#fastjoin) from [`feathers-hooks-common`](https://hooks-common.feathersjs.com)
 - [`populate`](https://feathers-graph-populate.netlify.app/getting-started.html#register-the-populate-hook) from [`feathers-graph-populate`](https://feathers-graph-populate.netlify.app/)
 
-`graphPopulate` is currently not running its inner joins. Probably mis-configured. But the results are heavily skewed until that is fixed.
-
 To run the tests, first run `npm run seed`. \
 Then run any test case such as `npm run test:belongsTo` or `npm test` to run all cases.
