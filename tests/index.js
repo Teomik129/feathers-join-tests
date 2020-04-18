@@ -3,11 +3,12 @@ const fastJoin = require("../src/hooks/fastJoin");
 const withResult = require("../src/hooks/withResult");
 const createApp = require("../src/app");
 const deepEqual = require("deep-equal");
+const afterAll = require("../src/util/afterAll");
 
 const services = ["foos", "bars", "bazzes"];
 
 const applyHooks = (app, hooks) =>
-  services.forEach((serv, i) => app.service(serv).hooks(hooks[i]));
+  services.forEach((serv, i) => app.service(serv).hooks(afterAll(hooks[i])));
 
 module.exports = async function speedTests(opts = {}) {
   const { many } = opts;
@@ -29,7 +30,7 @@ module.exports = async function speedTests(opts = {}) {
   // fastJoin - feathers-hooks-common
   console.info("Testing fastJoin...");
   const fjApp = createApp();
-  const fjHooks = fastJoin(opts)
+  const fjHooks = fastJoin(opts);
   applyHooks(fjApp, fjHooks);
   console.time("fastJoin");
   const [fjRes] = await fjApp.service(start).find();

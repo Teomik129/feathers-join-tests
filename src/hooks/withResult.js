@@ -1,5 +1,4 @@
 const { withResult } = require("feathers-fletching");
-const afterAll = require("../util/afterAll");
 
 const fooResult = {
   bar: async (foo, { app }) => app.service("bars").get(foo.barId),
@@ -67,5 +66,5 @@ module.exports = (opts = {}) => {
   return (batch
     ? [fooBatchResult, barBatchResult, bazBatchResult]
     : [fooResult, barResult, bazResult]
-  ).map((res, i) => afterAll(withResult(res, batch && preps[i])));
+  ).map((res, i) => withResult(res, batch && preps[i]));
 };

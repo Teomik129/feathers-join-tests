@@ -1,5 +1,4 @@
 const { populate } = require("feathers-graph-populate");
-const afterAll = require("../util/afterAll");
 
 const fooPops = {
   bar: {
@@ -43,6 +42,4 @@ const bazPops = {
 };
 
 module.exports = () =>
-  [fooPops, barPops, bazPops].map((populates) =>
-    afterAll(populate({ populates }))
-  );
+  [fooPops, barPops, bazPops].map((populates) => populate({ populates }));

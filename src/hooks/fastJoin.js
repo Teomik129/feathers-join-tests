@@ -1,7 +1,7 @@
 // Use this hook to manipulate incoming or outgoing data.
 // For more information on hooks see: http://docs.feathersjs.com/api/hooks.html
 const { fastJoin } = require("feathers-hooks-common");
-const afterAll = require("../util/afterAll");
+require("../util/afterAll");
 
 const fooResolvers = {
   joins: {
@@ -91,5 +91,5 @@ module.exports = (opts = {}) => {
   return (batch
     ? [fooBatchResolvers, barBatchResolvers, bazBatchResolvers]
     : [fooResolvers, barResolvers, bazResolvers]
-  ).map((resolver, i) => afterAll(fastJoin(resolver, queries[i])));
+  ).map((resolver, i) => fastJoin(resolver, queries[i]));
 };
