@@ -23,7 +23,6 @@ async function testRunner() {
 
   applyHooks(app, hooks);
 
-  console.time(hook);
 
   const $populateParams = {
     query: (many ? ["bars", "foos"] : ["bar", "baz"]).reduce((acc, key) => {
@@ -40,13 +39,14 @@ async function testRunner() {
     }, {}),
   };
 
+  console.time(hook);
   const [res] = await app
     .service(start)
     .find(hook === "graphPopulate" && { $populateParams });
+  console.timeEnd(hook);
 
   await writeJson(join(__dirname, `${hook}-output.json`), res);
 
-  console.timeEnd(hook);
 }
 
 testRunner();
