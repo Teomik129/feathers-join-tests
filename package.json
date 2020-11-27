@@ -2,7 +2,7 @@
   "name": "feathers-join-tests",
   "description": "Speed tests for various join methods",
   "version": "0.0.0",
-  "homepage": "",
+  "homepage": "https://github.com/Teomik129/feathers-join-tests",
   "private": true,
   "main": "src",
   "keywords": [
@@ -13,10 +13,8 @@
     "email": "teomik129@gmail.com"
   },
   "contributors": [],
-  "bugs": {},
-  "directories": {
-    "lib": "src",
-    "config": "config"
+  "bugs": {
+    "url": "https://github.com/Teomik129/feathers-join-tests/issues"
   },
   "engines": {
     "node": "^13.0.0",
@@ -34,22 +32,22 @@
   },
   "dependencies": {
     "@feathers-plus/batch-loader": "^0.3.6",
-    "@feathersjs/configuration": "^4.5.2",
-    "@feathersjs/errors": "^4.5.2",
-    "@feathersjs/feathers": "^4.5.2",
-    "deep-equal": "^2.0.2",
-    "execa": "^4.0.0",
-    "feathers-fletching": "^1.7.1",
-    "feathers-graph-populate": "^1.0.5",
-    "feathers-hooks-common": "^5.0.2",
+    "@feathersjs/configuration": "^4.5.10",
+    "@feathersjs/errors": "^4.5.10",
+    "@feathersjs/feathers": "^4.5.10",
+    "deep-equal": "^2.0.4",
+    "execa": "^4.1.0",
+    "feathers-fletching": "^1.12.2",
+    "feathers-graph-populate": "^1.1.0",
+    "feathers-hooks-common": "^5.0.4",
     "feathers-nedb": "^5.1.0",
-    "fs-extra": "^9.0.0",
+    "fs-extra": "^9.0.1",
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@feathersjs/cli": "^4.3.0",
-    "eslint": "^6.8.0",
+    "@feathersjs/cli": "^4.4.2",
+    "eslint": "^7.14.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.0.4"
+    "prettier": "^2.2.0"
   }
 }
