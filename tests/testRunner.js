@@ -2,11 +2,18 @@ const createApp = require("../src/app");
 const afterAll = require("../src/util/afterAll");
 const { writeJson } = require("fs-extra");
 const { join } = require("path");
+const { performance, PerformanceObserver } = require("perf_hooks");
+
+const observer = new PerformanceObserver((items) => {
+  const [{ duration }] = items.getEntries();
+  const seconds = Math.floor(duration / 1000);
+  const milliseconds = (duration % 1000).toPrecision(6);
+  console.info(`${hook}: ${seconds}s ${milliseconds}ms`);
+});
+
+observer.observe({ entryTypes: ["measure"] });
 
 const services = ["foos", "bars", "bazzes"];
-
-const applyHooks = (app, hooks) =>
-  services.forEach((serv, i) => app.service(serv).hooks(afterAll(hooks[i])));
 
 const hook = process.argv[2];
 
@@ -21,32 +28,30 @@ async function testRunner() {
 
   const hooks = require(`../src/hooks/${hook}`)(opts);
 
-  applyHooks(app, hooks);
-
+  hooks.forEach((hook, i) => {
+    app.service(services[i]).hooks(afterAll(hook));
+  });
 
   const $populateParams = {
-    query: (many ? ["bars", "foos"] : ["bar", "baz"]).reduce((acc, key) => {
-      const [prevKey] = Object.keys(acc);
-      return prevKey
-        ? {
-            [prevKey]: {
-              [key]: {},
-            },
-          }
-        : {
-            [key]: {},
-          };
-    }, {}),
+    query: many
+      ? {
+          bars: { foos: {} },
+        }
+      : {
+          bar: { baz: {} },
+        },
   };
 
-  console.time(hook);
+  const [hookStart, hookEnd] = ["start", "end"].map((str) => `${hook}_${str}`);
+
+  performance.mark(hookStart);
   const [res] = await app
     .service(start)
     .find(hook === "graphPopulate" && { $populateParams });
-  console.timeEnd(hook);
+  performance.mark(hookEnd);
+  performance.measure(hook, hookStart, hookEnd);
 
-  await writeJson(join(__dirname, `${hook}-output.json`), res);
-
+  await writeJson(join(__dirname, `${hook}-output.json`), res, { spaces: 2 });
 }
 
 testRunner();
